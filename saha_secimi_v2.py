@@ -110,7 +110,7 @@ st.header("Saha Çalışması Uygunluk Değerlendirme Formu")
 
 # --- AÇIKLAMA METNİ ---
 st.markdown("""
-<div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 5px solid #1E88E5;'>
+<div style='background-color: #f8f9fa; color: #333333; padding: 15px; border-radius: 5px; border-left: 5px solid #1E88E5;'>
     <strong>FORMUN AMACI:</strong> Bu değerlendirme aracı, 
     <em>Ortaöğretim Coğrafya Dersleri Öğretim Programı</em> kapsamında gerçekleştirilmesi planlanan 
     <strong>günübirlik saha/arazi çalışmaları</strong> için belirlenen lokasyonların eğitsel, lojistik ve güvenlik 
@@ -270,3 +270,4 @@ if st.button("Analizi Tamamla ve Rapor Oluştur", type="primary"):
         
         if os.path.exists("temp_chart.png"):
             os.remove("temp_chart.png")
+
