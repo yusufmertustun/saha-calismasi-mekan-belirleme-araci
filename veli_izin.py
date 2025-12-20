@@ -157,7 +157,7 @@ st.set_page_config(page_title="Veli İzin Belgesi", page_icon="✂️", layout="
 st.header("📝 Veli İzin Belgesi Oluşturucu")
 
 st.markdown("""
-<div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 5px solid #1E88E5;'>
+<div style='background-color: #f8f9fa; color: #333333; padding: 15px; border-radius: 5px; border-left: 5px solid #1E88E5;'>
     <strong>UYGULAMANIN AMACI:</strong> Bu araç, 
     <em>Ortaöğretim Coğrafya Dersleri Öğretim Programı</em> kapsamında gerçekleştirilmesi planlanan 
     <strong>günübirlik saha/arazi çalışmaları</strong> için gerekli olan resmi veli izin ve muvafakat belgelerini 
@@ -208,3 +208,4 @@ with tab2:
         pdf_data = create_dual_pdf(school_name, c_name, s_no, s_name, teacher_name, destination, trip_date, transport, purpose)
         st.success(f"{s_name} için belge hazır!")
         st.download_button(f"📥 {s_name} İzin Belgesi İndir", pdf_data, f"Izin_{s_name}.pdf", "application/pdf")
+
