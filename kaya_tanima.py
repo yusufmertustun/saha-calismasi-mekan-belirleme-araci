@@ -5,8 +5,8 @@ from fpdf import FPDF
 import os
 import datetime
 
-# --- SAYFA AYARLARI ---
-st.set_page_config(page_title="AI Kayaç Analisti", page_icon="🪨", layout="centered")
+# --- SAYFA AYARLARI (Emoji kaldırıldı) ---
+st.set_page_config(page_title="Akademik Kayaç Analisti", layout="centered")
 
 # --- GİZLİ KASADAN ANAHTARI AL ---
 try:
@@ -84,7 +84,7 @@ def analyze_image(image, key):
     
     Eğer bu bir taş değilse, bilimsel bir dille görselin analiz edilemediğini belirt.
     """
-    with st.spinner('💎 Numune inceleniyor... Kristal yapı taranıyor...'):
+    with st.spinner('Numune inceleniyor... Kristal yapı taranıyor...'):
         try:
             response = model.generate_content([prompt, image])
             return response.text
@@ -92,10 +92,13 @@ def analyze_image(image, key):
             return f"Hata oluştu: {e}"
 
 # --- ARAYÜZ TASARIMI ---
+# Logonun olduğu yerde emoji yoktu, ikon resim olarak duruyor.
 st.image("https://img.icons8.com/fluency/96/rock.png", width=80)
-st.title("🪨 Akademik Kayaç Analisti")
 
-# --- AÇIKLAMA METNİ (DÜZELTİLMİŞ HALİ) ---
+# BAŞLIK (Emoji Silindi)
+st.title("Akademik Kayaç Analisti")
+
+# --- AÇIKLAMA METNİ ---
 st.markdown("""
 <div style='background-color: #f8f9fa; color: #333333; padding: 15px; border-radius: 5px; border-left: 5px solid #1E88E5; font-size: 14px;'>
     <strong>UYGULAMANIN AMACI:</strong><br>
@@ -104,7 +107,8 @@ st.markdown("""
     Uygulama; kayaç/mineral adı, jeolojik grup, oluşum süreci, dokusal ve yapısal özellikler (tabakalanma, tanelilik, renk, ayrışma direnci vb.), 
     tahmini Mohs sertliği, Türkiye’deki olası yayılım alanları ve öğretim amaçlı ayırt edici ipuçları gibi başlıklarda kullanıcıya 
     rehberlik edici analizler sunmayı hedeflemektedir.<br><br>
-    Bu araç, özellikle öğrencilerin saha ve sergi ortamlarında gözlemsel becerilerini geliştirmelerine yardımcı olmak üzere tasarlanmıştır.<br><br><strong>⚠️ Kesin tanı için laboratuvar testlerinin gerekli olduğunu unutmayınız.</strong><br>
+    Bu araç, özellikle öğrencilerin saha ve sergi ortamlarında gözlemsel becerilerini geliştirmelerine yardımcı olmak üzere tasarlanmıştır.<br><br>
+    <strong>⚠️ Kesin tanı için laboratuvar testlerinin gerekli olduğunu unutmayınız.</strong><br>
     Sunulan çıktılar, <strong>kesin tanı yerine ön değerlendirme ve eğitim amaçlı yorumlar</strong> niteliğindedir.<br><br>
     <em>Bu çalışma henüz geliştirilme aşamasında olup, bir pilot uygulama niteliği taşımaktadır. Geliştirilme sürecinde Google Gemini yaygın bir şekilde kullanılmıştır. Görüş ve önerileriniz için: 
     <strong>Arş. Gör. Yusuf Mert Üstün, yusuf.ustun@marmara.edu.tr</strong></em>
@@ -124,7 +128,7 @@ if uploaded_file is not None:
     if st.button("🔍 DETAYLI ANALİZ BAŞLAT", type="primary"):
         result_text = analyze_image(image, api_key)
         
-        st.markdown("### 📝 Jeolojik Analiz Raporu")
+        st.markdown("### Jeolojik Analiz Raporu")
         st.markdown(f"""
         <div style='background-color: #ffffff; padding: 20px; border-radius: 10px; border: 1px solid #e0e0e0; color: #333333;'>
             {result_text}
