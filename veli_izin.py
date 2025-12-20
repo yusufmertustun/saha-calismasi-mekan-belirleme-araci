@@ -25,9 +25,9 @@ def create_dual_pdf(school_name, class_name, student_no, student_name, teacher_n
     pdf.add_page()
 
     def draw_slip(start_y):
-        pdf.set_xy(10, start_y + 5)
+        # 1. BAŞLIK BÖLÜMÜ
+        pdf.set_xy(10, start_y + 8) # Biraz aşağıdan başlattık
         
-        # Başlıklar
         if has_tr_font: pdf.set_font('TrFont', '', 11)
         else: pdf.set_font("Arial", "B", 11)
             
@@ -35,8 +35,8 @@ def create_dual_pdf(school_name, class_name, student_no, student_name, teacher_n
         pdf.cell(0, 5, txt=txt_fix(f"{school_name.upper()} MÜDÜRLÜĞÜ"), ln=True, align='C')
         pdf.cell(0, 5, txt=txt_fix("VELİ İZİN VE MUVAFAKAT BELGESİ"), ln=True, align='C')
         
-        # Metin
-        pdf.set_xy(10, start_y + 22)
+        # 2. İZİN METNİ
+        pdf.set_xy(10, start_y + 25) # Boşluğu artırdık
         if has_tr_font: pdf.set_font('TrFont', '', 9)
         else: pdf.set_font("Arial", "", 9)
         
@@ -50,95 +50,112 @@ def create_dual_pdf(school_name, class_name, student_no, student_name, teacher_n
             f"{s_name}'nın; okulunuz coğrafya dersi kapsamında, sorumlu öğretmen "
             f"{t_name} gözetiminde düzenlenecek olan saha çalışmasına katılmasına izin veriyorum."
         )
-        pdf.multi_cell(0, 4, txt=body_text)
+        # Satır yüksekliğini (h) 4'ten 5'e çıkardık ki satırlar birbirine girmesin
+        pdf.multi_cell(0, 5, txt=body_text)
         
-        # Tablo
-        current_y = pdf.get_y() + 3
+        # 3. SAHA ÇALIŞMASI BİLGİLERİ (TABLO)
+        # Dinamik boşluk: Metin nerede bittiyse 4 birim altına in
+        current_y = pdf.get_y() + 4
         pdf.set_xy(10, current_y)
+        
         if has_tr_font: pdf.set_font('TrFont', '', 9) 
         else: pdf.set_font("Arial", "B", 9)  
-        pdf.cell(0, 5, txt=txt_fix("SAHA ÇALIŞMASI BİLGİLERİ"), ln=True, border='B')
+        pdf.cell(0, 6, txt=txt_fix("SAHA ÇALIŞMASI BİLGİLERİ"), ln=True, border='B')
         
         if has_tr_font: pdf.set_font('TrFont', '', 8)
         else: pdf.set_font("Arial", "", 8)
             
-        line_height = 4.5
-        pdf.cell(40, line_height, txt=txt_fix("Gidilecek Yer"), border=0)
+        line_height = 5.5 # Satır aralığını açtık
+        
+        # Gidilecek Yer
+        pdf.cell(35, line_height, txt=txt_fix("Gidilecek Yer"), border=0)
         pdf.cell(3, line_height, txt=":", border=0)
         pdf.cell(0, line_height, txt=txt_fix(destination), ln=True)
         
-        pdf.cell(40, line_height, txt=txt_fix("Tarih"), border=0)
+        # Tarih
+        pdf.cell(35, line_height, txt=txt_fix("Tarih"), border=0)
         pdf.cell(3, line_height, txt=":", border=0)
         pdf.cell(0, line_height, txt=txt_fix(trip_date.strftime("%d/%m/%Y")), ln=True)
         
-        pdf.cell(40, line_height, txt=txt_fix("Ulaşım Aracı"), border=0)
+        # Ulaşım
+        pdf.cell(35, line_height, txt=txt_fix("Ulaşım Aracı"), border=0)
         pdf.cell(3, line_height, txt=":", border=0)
         pdf.cell(0, line_height, txt=txt_fix(transport), ln=True)
         
-        pdf.cell(40, line_height, txt=txt_fix("Etkinliğin Amacı"), border=0)
+        # Amacı
+        pdf.cell(35, line_height, txt=txt_fix("Etkinliğin Amacı"), border=0)
         pdf.cell(3, line_height, txt=":", border=0)
         pdf.multi_cell(0, line_height, txt=txt_fix(purpose))
         
-        # Sağlık
-        current_y = pdf.get_y() + 2
+        # 4. SAĞLIK VE İLETİŞİM
+        current_y = pdf.get_y() + 3
         pdf.set_xy(10, current_y)
         if has_tr_font: pdf.set_font('TrFont', '', 9)
         else: pdf.set_font("Arial", "B", 9)
-        pdf.cell(0, 5, txt=txt_fix("SAĞLIK VE İLETİŞİM BİLGİLERİ"), ln=True, border='B')
-        
-        if has_tr_font: pdf.set_font('TrFont', '', 7)
-        else: pdf.set_font("Arial", "", 7)
-        health_q = "Öğrencimin etkinliğe katılmasına engel kronik rahatsızlığı (fobi, kalp, astım vb.) var mı?"
-        pdf.cell(0, 4, txt=txt_fix(health_q), ln=True)
+        pdf.cell(0, 6, txt=txt_fix("SAĞLIK VE İLETİŞİM BİLGİLERİ"), ln=True, border='B')
         
         if has_tr_font: pdf.set_font('TrFont', '', 8)
         else: pdf.set_font("Arial", "", 8)
-        pdf.cell(5, 4, txt="", border=1)
-        pdf.cell(20, 4, txt=txt_fix(" Hayır"), ln=False)
-        pdf.cell(5, 4, txt="", border=1)
-        pdf.cell(20, 4, txt=txt_fix(" Evet"), ln=False)
-        pdf.cell(0, 4, txt=txt_fix("(Açıklayınız: ..............................................................)"), ln=True)
         
-        pdf.ln(2)
-        pdf.cell(35, 4, txt=txt_fix("Veli Tel"), border=0)
-        pdf.cell(0, 4, txt=": ...........................................................", ln=True)
-        pdf.cell(35, 4, txt=txt_fix("Acil Durum 2. Kişi"), border=0)
-        pdf.cell(0, 4, txt=": ........................................................... (Tel: .......................................)", ln=True)
+        # Sağlık Sorusu
+        health_q = "Öğrencimin etkinliğe engel kronik rahatsızlığı (fobi, kalp, astım vb.) var mı?"
+        pdf.cell(0, 5, txt=txt_fix(health_q), ln=True)
+        
+        # Kutucuklar (Biraz daha aralıklı)
+        pdf.cell(5, 5, txt="", border=1)
+        pdf.cell(15, 5, txt=txt_fix(" Hayır"), ln=False)
+        pdf.cell(5, 5, txt="", border=0) # Boşluk
+        pdf.cell(5, 5, txt="", border=1)
+        pdf.cell(15, 5, txt=txt_fix(" Evet"), ln=False)
+        pdf.cell(0, 5, txt=txt_fix("(Açıklayınız: .....................................................)"), ln=True)
+        
+        pdf.ln(2) # Hafif boşluk
+        
+        # Kan Grubu (YENİ EKLENDİ)
+        pdf.cell(35, 5, txt=txt_fix("Kan Grubu"), border=0)
+        pdf.cell(0, 5, txt=": ...........................................................", ln=True)
+        
+        # İletişim
+        pdf.cell(35, 5, txt=txt_fix("Veli Tel"), border=0)
+        pdf.cell(0, 5, txt=": ...........................................................", ln=True)
+        
+        pdf.cell(35, 5, txt=txt_fix("Acil Durum 2. Kişi"), border=0)
+        pdf.cell(0, 5, txt=": ...................................... (Tel: ...................................)", ln=True)
 
-        # İmza
-        pdf.ln(3)
+        # 5. İMZA BÖLÜMÜ
+        pdf.ln(4)
         if has_tr_font: pdf.set_font('TrFont', '', 7)
         else: pdf.set_font("Arial", "", 7)
         taahhut = "Yukarıdaki bilgilerin doğruluğunu beyan eder, öğrencimin sorumluluğunu kabul ederim."
-        pdf.multi_cell(0, 3, txt=txt_fix(taahhut), align='C')
+        pdf.multi_cell(0, 4, txt=txt_fix(taahhut), align='C')
         
-        pdf.ln(3)
+        pdf.ln(2)
         if has_tr_font: pdf.set_font('TrFont', '', 9)
         else: pdf.set_font("Arial", "", 9)
+        
         pdf.cell(95, 5, txt=txt_fix(f"Tarih: ..../..../20...."), align='C')
         pdf.cell(95, 5, txt=txt_fix("Velinin Adı Soyadı - İmza"), align='C')
 
-    # İki tane çiz
-    draw_slip(0)
+    # İki belgeyi çiz
+    draw_slip(0)   # Üst kopya
     
-    # Kesme çizgisi
+    # Kesme Çizgisi
     pdf.set_line_width(0.5)
     pdf.set_draw_color(150, 150, 150)
     pdf.dashed_line(0, 148, 210, 148, dash_length=2, space_length=2)
-    pdf.set_xy(100, 146)
+    pdf.set_xy(100, 145)
     pdf.set_font("Arial", size=8)
-    pdf.cell(10, 4, "- - - - Kesme Çizgisi - - - -", align='C')
+    pdf.cell(10, 4, "- - - - Kesme Cizgisi - - - -", align='C')
 
-    draw_slip(148)
+    draw_slip(148) # Alt kopya
     
     return pdf.output(dest='S').encode('latin-1', 'ignore')
 
-# --- ARAYÜZ BAŞLANGICI ---
-st.set_page_config(page_title="Veli İzin Belgesi", page_icon="📝", layout="centered")
+# --- ARAYÜZ ---
+st.set_page_config(page_title="Veli İzin Belgesi", page_icon="✂️", layout="centered")
 
 st.header("📝 Veli İzin Belgesi Oluşturucu")
 
-# --- AÇIKLAMA KUTUSU ---
 st.markdown("""
 <div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 5px solid #1E88E5;'>
     <strong>UYGULAMANIN AMACI:</strong> Bu araç, 
@@ -150,11 +167,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.write("") 
 
-# Font Uyarısı
 if not os.path.exists("tr_font.ttf"):
-    st.warning("⚠️ 'tr_font.ttf' dosyası bulunamadı! Türkçe karakterler (ğ, ş, İ) düzgün çıkmayabilir.")
+    st.warning("⚠️ 'tr_font.ttf' dosyası bulunamadı! Türkçe karakterler düzgün çıkmayabilir.")
 
-# --- FORM GİRİŞLERİ (GÜNCELLENDİ) ---
 st.markdown("### 🏫 Okul ve Saha Çalışması Bilgileri")
 
 with st.container():
@@ -166,26 +181,22 @@ with st.container():
         
     with col2:
         teacher_name = st.text_input("Sorumlu Öğretmen", placeholder="Ad Soyad")
-        # Format Gün/Ay/Yıl yapıldı
         trip_date = st.date_input("Saha Çalışması Tarihi", datetime.date.today() + datetime.timedelta(days=7), format="DD/MM/YYYY")
         purpose = st.text_area("Etkinlik Amacı", "Coğrafi gözlem ve inceleme gezisi.", height=105)
 
 st.divider()
 
-# --- ÇIKTI ALANI ---
 st.markdown("### 🎓 Belge Oluşturma")
 
 tab1, tab2 = st.tabs(["📄 Toplu Şablon (Boş)", "👤 Öğrenciye Özel"])
 
-# TAB 1: BOŞ ŞABLON
 with tab1:
     st.info("Bu seçenek ile isim kısımları boş bırakılır. Sınıfa dağıtmak için uygundur.")
-    if st.button("Boş Şablonu Oluştur (2'li PDF)", type="primary"):
+    if st.button("Boş Şablonu Oluştur", type="primary"):
         pdf_data = create_dual_pdf(school_name, "", "", "", teacher_name, destination, trip_date, transport, purpose)
-        st.success("Şablon oluşturuldu!")
+        st.success("Şablon hazır!")
         st.download_button("📥 Şablonu İndir (PDF)", pdf_data, "Veli_Izin_Sablon.pdf", "application/pdf")
 
-# TAB 2: ÖZEL BELGE
 with tab2:
     st.write("Tek bir öğrenci için dolu belge hazırlar.")
     c1, c2, c3 = st.columns(3)
